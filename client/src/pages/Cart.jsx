@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react"
 import { useAppContext } from "../context/AppContext"
 import { assets, dummyAddress } from "../assets/assets";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const Cart = () => {
-    const { products, currency, cartItems, removeFromCart, getItemCount, updateCartItems, navigate, getCartAmount }
+    const { products, currency, cartItems, removeCartItem, getItemCount, 
+        updateCartItems, navigate, getCartAmount, User, setCartItems }
     = useAppContext();
 
     const [cartArray, setCartArray] = useState([]);
-    const [addresses, setAddresses] = useState(dummyAddress);
+    const [addresses, setAddresses] = useState([]);
     const [showAddress, setShowAddress] = useState(false);
-    const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0]);
+    const [selectedAddress, setSelectedAddress] = useState(null);
     const [paymentOption, setPaymentOption] = useState("COD");
 
     const getCart = () => {
@@ -24,15 +27,33 @@ const Cart = () => {
         setCartArray(tempArray);
     }
 
-    const placeOrder = async () => {
-        // Order placement logic
+    const getUserAddress = async() => {
+        try {
+            const { data } = await axios.get('/api/address/get');
+            if(data.success){
+                setAddresses(data.addresses);
+                if(data.addresses.length > 0){
+                    setSelectedAddress(data.addresses[0]);
+                }
+                else{
+                    toast.error(data.message);
+                }
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
     }
-
     useEffect(() => {
         if (products.length > 0 && cartItems) {
             getCart();
         }
     }, [products, cartItems])
+
+    useEffect(() => {
+        if(User){
+            getUserAddress();
+        }
+    },[User])
 
     // FIXED: Better cart count calculation
     const calculateCartCount = () => {
@@ -50,6 +71,49 @@ const Cart = () => {
     const cartAmount = getCartAmount ? getCartAmount() : 0;
     const taxAmount = cartAmount * 0.02;
     const totalAmount = cartAmount + taxAmount;
+
+
+    const placeOrder = async () => {
+        try {
+            if (!selectedAddress){
+                return toast.error("Please select a delivery address");
+        }
+        //  COD
+        if(paymentOption === 'COD'){
+            const {data} = await axios.post('/api/order/cod', {
+                userId : User._id,
+                items: cartArray.map(item =>({ product: item._id, quantity: item.quantity })),
+                address: selectedAddress._id,
+            })
+            if(data.success){
+                toast.success(data.message);
+                setCartItems({});
+                navigate('/my-order');
+            }
+            else{
+                toast.error(data.message);
+            }
+        }
+        else{
+            // Stripe
+            const {data} = await axios.post('/api/order/stripe', {
+                items: cartArray.map(item => ({ product: item._id, quantity: item.quantity })),
+                address: selectedAddress._id,
+            });
+
+            if(data.success){
+                window.location.replace(data.url)
+            }
+            else{
+                toast.error(data.message);
+            }
+        }
+        }catch (error) {
+                toast.error(error.message);
+            
+        }
+        
+    }
 
     if (!products.length || !cartItems) {
         return (
@@ -133,7 +197,7 @@ const Cart = () => {
                                                     <h3 className="font-semibold text-gray-900 truncate">{product.name}</h3>
                                                     <p className="text-sm text-gray-600 mt-1">Weight: {product.weight || "N/A"}</p>
                                                     <p className="text-sm text-primary font-medium mt-2">
-                                                        {currency}{product.offerPrice} each
+                                                        {currency}{product.offerPrice}
                                                     </p>
                                                 </div>
                                             </div>
@@ -165,7 +229,7 @@ const Cart = () => {
                                                     {currency}{(product.offerPrice * product.quantity).toFixed(2)}
                                                 </span>
                                                 <button 
-                                                    onClick={() => removeFromCart(product._id)} 
+                                                    onClick={() => removeCartItem(product._id)} 
                                                     className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200"
                                                     title="Remove item"
                                                 >

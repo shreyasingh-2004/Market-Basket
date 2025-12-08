@@ -22,7 +22,8 @@ const Login = () => {
 
         try {
             event.preventDefault();
-            const { data } = await axios.post(`/api/user/${state}`, { name, email, password });
+            const { data } = await axios.post(`/api/user/${state}`, 
+                { name, email, password });
 
             if (data.success) {
                 navigate('/');

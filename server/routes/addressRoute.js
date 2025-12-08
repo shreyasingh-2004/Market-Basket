@@ -4,6 +4,6 @@ import { addAddress, getAddress } from "../controller/addressController.js";
 
 const addressRouter = express.Router();
 addressRouter.post('/add', authUser,addAddress);
-addressRouter.post('/get', authUser,getAddress);
+addressRouter.get('/get', authUser,getAddress);
 
 export default  addressRouter;

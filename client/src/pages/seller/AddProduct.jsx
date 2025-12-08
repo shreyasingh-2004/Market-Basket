@@ -32,7 +32,7 @@ const AddProduct = () => {
         }
 
         try {
-            const { data } = await axios.post('/api/product/add', formData, { timeout: 300000 });
+            const { data } = await axios.post('/api/product/add', formData, { timeout: 30000 });
             console.log('AddProduct response', data);
             if (data && data.success) {
                 toast.success(data.message || 'Product added');

@@ -44,6 +44,7 @@ app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter);
+console.log('Routes registered: /api/order should handle POST /stripe');
 
 // 404 handler for unknown routes
 app.use((req, res) => {

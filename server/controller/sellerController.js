@@ -20,6 +20,7 @@ export const sellerLogin = async (req, res) => {
         if (passwordReq === sellerPassword && emailReq === sellerEmail) {
             const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
+
             res.cookie('sellerToken', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',

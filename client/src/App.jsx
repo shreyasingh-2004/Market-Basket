@@ -1,5 +1,4 @@
 import React from 'react'
-// import { AppContextProvider } from './context/AppContext';
 import Navbar from './component/Navbar'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
@@ -18,16 +17,25 @@ import SellerLayout from './pages/seller/SellerLayout'
 import AddProduct from './pages/seller/AddProduct'
 import ProductList from './pages/seller/ProductList'
 import Orders from './pages/seller/Orders'
+import Loading from './component/Loading'
 
 const App = () => {
-  const isSellerPath = useLocation().pathname.includes("seller");
+  const location = useLocation();
+  const isSellerPath = location.pathname.includes("seller");
   const { ShowUserLogin, isSeller } = useAppContext();
 
   return (
     <div className='text-default min-h-screen text-gray-700 bg-white'>
-      {isSellerPath ? null : <Navbar />}
+      
+      {/* Show Navbar for user pages only */}
+      {!isSellerPath && <Navbar />}
+
+      {/* User Login Modal */}
       {ShowUserLogin && <Login />}
+
       <Toaster />
+
+      {/* Apply padding only for user paths */}
       <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
         <Routes>
           <Route path='/' element={<Home />} />
@@ -37,16 +45,27 @@ const App = () => {
           <Route path='/cart' element={<Cart />} />
           <Route path='/add-address' element={<AddAddress />} />
           <Route path='/my-order' element={<MyOrders />} />
-          <Route path='/seller' element={isSeller ? <SellerLayout /> : <SellerLogin />}>
+          <Route path='/loader' element={<Loading />} />
+
+
+          {/* Seller Routes */}
+          <Route 
+            path='/seller' 
+            element={isSeller ? <SellerLayout /> : <SellerLogin />}
+          >
             <Route index element={<AddProduct />} />
             <Route path='product-list' element={<ProductList />} />
             <Route path='orders' element={<Orders />} />
           </Route>
+
         </Routes>
       </div>
+
+      {/* Show footer for user pages only */}
       {!isSellerPath && <Footer />}
+
     </div>
   )
 }
 
-export default App
+export default App;
