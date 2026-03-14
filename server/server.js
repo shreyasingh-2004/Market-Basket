@@ -26,7 +26,7 @@ try {
     console.error('Failed to connect to database:', err?.message || err);
 }
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173').split(',').map(origin => origin.trim());
 // middleware config
 app.use(express.json());
 app.use(cookieParser());
