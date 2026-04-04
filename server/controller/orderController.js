@@ -8,7 +8,7 @@ export const placeOrderCOD = async (req, res) => {
         const userId = req.userId;
         const { items, address } = req.body;
 
-        if (!address || items.length === 0) {
+        if (!address || !items || items.length === 0) {
             return res.json({ success: false, message: "Invalid data" });
         }
 
@@ -16,10 +16,21 @@ export const placeOrderCOD = async (req, res) => {
 
         for (const item of items) {
             const product = await Product.findById(item.product);
-            amount += product.offerPrice * item.quantity;
+            
+            // Check if product exists
+            if (!product) {
+                return res.json({ 
+                    success: false, 
+                    message: `Product not found with ID: ${item.product}` 
+                });
+            }
+            
+            // Use offerPrice or fallback to price
+            const price = product.offerPrice || product.price || 0;
+            amount += price * item.quantity;
         }
 
-        // Add tax charge(2%)
+        // Add tax charge (2%)
         amount += Math.floor(amount * 0.02);
 
         await Order.create({
@@ -51,7 +62,7 @@ export const placeOrderStripe = async (req, res) => {
         }
 
         const TAX_RATE = 0.02; // 2%
-        const stripeCurrency = (process.env.STRIPE_CURRENCY || 'usd').toLowerCase();
+        const stripeCurrency = (process.env.STRIPE_CURRENCY || 'inr').toLowerCase();
 
         let amount = 0; 
         let productData = [];
@@ -59,6 +70,15 @@ export const placeOrderStripe = async (req, res) => {
         // Calculate amount & prepare product summary
         for (const item of items) {
             const product = await Product.findById(item.product);
+            
+            // Check if product exists
+            if (!product) {
+                return res.json({ 
+                    success: false, 
+                    message: `Product not found with ID: ${item.product}` 
+                });
+            }
+            
             const unitPrice = Number(product.offerPrice || product.price || 0);
             amount += unitPrice * item.quantity;
 
@@ -70,7 +90,7 @@ export const placeOrderStripe = async (req, res) => {
         }
 
         // Apply tax precisely and round to 2 decimals (store in main currency units)
-        const amountMain = Math.round(amount * (1 + TAX_RATE) * 100) / 100; // e.g. 49.99
+        const amountMain = Math.round(amount * (1 + TAX_RATE) * 100) / 100;
 
         // Create the order first (store amount in main currency units)
         const order = await Order.create({
@@ -136,14 +156,12 @@ export const getUserOrder = async (req, res) => {
         res.json({ success: true, orders });
 
     } catch (error) {
-        // console.log(error.message);
+        console.log(error.message);
         res.json({ success: false, message: error.message });
     }
 }
 
-//  get all order for seller : /api/order/seller
-
-
+// get all order for seller : /api/order/seller
 export const getAllOrder = async (req, res) => {
     try {
         console.log('getAllOrder: fetching seller orders...');

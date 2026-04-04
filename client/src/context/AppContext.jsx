@@ -62,7 +62,11 @@ const AppContextProvider = ({ children }) => {
     try {
       const { data } = await axios.get("/api/seller/is-auth");
       setIsSeller(data?.success && data.user ? true : false);
-    } catch {
+    } catch (err) {
+      // 401 is expected when no seller token exists; suppress console spam
+      if (err.response?.status !== 401) {
+        console.warn("checkSellerAuth error:", err.message);
+      }
       setIsSeller(false);
     }
   };
@@ -74,7 +78,11 @@ const AppContextProvider = ({ children }) => {
         setUser(data.user);
         setCartItems(data.user.cartItems || {});
       }
-    } catch {
+    } catch (err) {
+      // 401 is expected when no user token exists; suppress console spam
+      if (err.response?.status !== 401) {
+        console.warn("fetchUser error:", err.message);
+      }
       setUser(null);
     }
   };
