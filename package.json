@@ -1,10 +1,9 @@
 {
   "name": "market-basket",
   "version": "1.0.0",
-  "workspaces": ["client", "server"],
   "scripts": {
-    "build": "npm run build --workspace=client",
-    "start": "npm start --workspace=server"
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && node server.js"
   },
   "engines": {
     "node": ">=18"
