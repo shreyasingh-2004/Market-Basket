@@ -32,7 +32,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+const cors = require("cors");
+
+app.use(cors({
+  origin: "https://your-frontend.vercel.app"
+}));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../client/dist')));
