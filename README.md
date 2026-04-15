@@ -1,11 +1,7 @@
 ﻿# Market-Basket
 🛒 Grocery Market Basket App (MERN Stack)
-
 A full-stack grocery shopping web application built using the MERN stack. This project demonstrates core concepts of full-stack development including authentication, CRUD operations, API integration, and deployment.
 
-🚀 Live Demo
-🔗 Frontend: [Your Vercel Link]
-🔗 Backend API: [Your Render Link]
 📌 Features
 🛍️ Browse grocery products by categories
 ➕ Add / remove items from cart
@@ -17,63 +13,31 @@ A full-stack grocery shopping web application built using the MERN stack. This p
 🧱 Tech Stack
 
 Frontend:
-
 React.js
 Axios
 React Router
 Bootstrap / Tailwind CSS
 
 Backend:
-
 Node.js
 Express.js
 
 Database:
-
 MongoDB (Mongoose)
 
 Deployment:
-
 Frontend: Vercel
-Backend: Render
+Backend: Railway
+
 Database: MongoDB Atlas
-⚙️ Installation & Setup
-1. Clone the repository
-git clone https://github.com/your-username/grocery-app.git
-cd grocery-app
-2. Setup Backend
-cd server
-npm install
 
-Create .env file:
-
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-CLIENT_URL=your_frontend_url
-
-Run backend:
-
-npm start
-3. Setup Frontend
-cd client
-npm install
-npm start
-
-Create .env file:
-
-REACT_APP_API_URL=your_backend_url
-🚧 Challenges Faced
-Handling CORS issues between frontend and backend in production
-Managing global cart state synchronization
-Fixing environment variable issues during deployment
-Designing efficient MongoDB schemas for users, products, and orders
-Optimizing API calls for better performance
 📚 Learnings
 Full-stack architecture using MERN
 REST API development and integration
 State management in React
 Deployment workflow using Vercel, Render, and MongoDB Atlas
 Debugging real-world production issues
+
 📌 Future Improvements
 Payment gateway integration
 Advanced admin dashboard
