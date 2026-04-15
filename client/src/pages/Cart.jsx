@@ -3,6 +3,7 @@ import { useAppContext } from "../context/AppContext"
 import { assets, dummyAddress } from "../assets/assets";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { API } from "../api";
 
 const Cart = () => {
     const { products, currency, cartItems, removeCartItem, getItemCount, 
@@ -29,7 +30,7 @@ const Cart = () => {
 
     const getUserAddress = async() => {
         try {
-            const { data } = await axios.get('/api/address/get');
+            const { data } = await axios.get(`${API}/api/address/get`);
             if(data.success){
                 setAddresses(data.addresses);
                 if(data.addresses.length > 0){
@@ -80,7 +81,7 @@ const Cart = () => {
         }
         //  COD
         if(paymentOption === 'COD'){
-            const {data} = await axios.post('/api/order/cod', {
+            const {data} = await axios.post(`${API}/api/order/cod`, {
                 userId : User._id,
                 items: cartArray.map(item =>({ product: item._id, quantity: item.quantity })),
                 address: selectedAddress._id,
@@ -96,7 +97,7 @@ const Cart = () => {
         }
         else{
             // Stripe
-            const {data} = await axios.post('/api/order/stripe', {
+            const {data} = await axios.post(`${API}/api/order/stripe`, {
                 items: cartArray.map(item => ({ product: item._id, quantity: item.quantity })),
                 address: selectedAddress._id,
             });

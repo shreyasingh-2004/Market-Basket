@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { useAppContext } from '../context/AppContext'
 import axios from 'axios'
+import { API } from '../api'
 import toast from 'react-hot-toast'
 
 const Navbar = () => {
@@ -11,7 +12,7 @@ const Navbar = () => {
 
     const logout = async () => {
         try {
-             const { data } = await axios.get('/api/user/logout');
+             const { data } = await axios.get(`${API}/api/user/logout`);
              if(data.success){
              toast.success(data.message);
                      setUser(null);

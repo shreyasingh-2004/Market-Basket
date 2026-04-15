@@ -2,16 +2,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { API } from "../api";
 
 axios.defaults.withCredentials = true;
 
 // Backend URL handling
-const backendUrl = (import.meta.env.VITE_BACKEND_URL || "")
-  .toString()
-  .trim()
-  .replace(/\/$/, "");
-
-axios.defaults.baseURL = import.meta.env.DEV ? "" : backendUrl;
+axios.defaults.baseURL = import.meta.env.DEV ? "" : API;
 
 // -------------------------------------
 // CREATE CONTEXT

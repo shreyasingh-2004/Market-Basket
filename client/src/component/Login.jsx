@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAppContext } from '../context/AppContext';
 import axios from 'axios';
+import { API } from '../api';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -22,7 +23,7 @@ const Login = () => {
 
         try {
             event.preventDefault();
-            const { data } = await axios.post(`/api/user/${state}`, 
+            const { data } = await axios.post(`${API}/api/user/${state}`, 
                 { name, email, password });
 
             if (data.success) {
