@@ -1,29 +1,37 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-import cookieParser from 'cookie-parser';
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import connectDB from './configs/db.js';
-import userRouter from './routes/UserRoute.js';
-import sellerRouter from './routes/SellerRoute.js';
-import { connectCloudinary } from './configs/cloudinary.js';
-import productRouter from './routes/productRoute.js';
-import cartRouter from './routes/cartRoute.js';
-import addressRouter from './routes/addressRoute.js';
-import orderRouter from './routes/orderRoute.js';
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import connectDB from "./configs/db.js";
+import { connectCloudinary } from "./configs/cloudinary.js";
+
+// Routes
+import userRouter from "./routes/UserRoute.js";
+import sellerRouter from "./routes/SellerRoute.js";
+import productRouter from "./routes/productRoute.js";
+import cartRouter from "./routes/cartRoute.js";
+import addressRouter from "./routes/addressRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
-  .split(',')
+/* ---------------- CORS ---------------- */
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
   .map(origin => origin.trim());
 
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
+/* ---------------- MIDDLEWARES ---------------- */
 app.use(express.json());
 app.use(cookieParser());
 
@@ -32,33 +40,25 @@ app.use((req, res, next) => {
   next();
 });
 
-const cors = require("cors");
-
-app.use(cors({
-  origin: "https://your-frontend.vercel.app"
-}));
-
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-// API routes
-app.use('/api/user', userRouter);
-app.use('/api/seller', sellerRouter);
-app.use('/api/product', productRouter);
-app.use('/api/cart', cartRouter);
-app.use('/api/address', addressRouter);
-app.use('/api/order', orderRouter);
-
-// Catch all handler: send back React's index.html file for client-side routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+/* ---------------- HEALTH CHECK ---------------- */
+app.get("/", (req, res) => {
+  res.send("API is running...");
 });
 
-// 404 handler for API
+/* ---------------- ROUTES ---------------- */
+app.use("/api/user", userRouter);
+app.use("/api/seller", sellerRouter);
+app.use("/api/product", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/address", addressRouter);
+app.use("/api/order", orderRouter);
+
+/* ---------------- 404 ---------------- */
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Not Found' });
+  res.status(404).json({ success: false, message: "Not Found" });
 });
 
+/* ---------------- START SERVER ---------------- */
 const startServer = async () => {
   try {
     await connectDB();
@@ -67,9 +67,8 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
-
   } catch (err) {
-    console.error('Startup error:', err.message);
+    console.error("Startup error:", err.message);
     process.exit(1);
   }
 };
