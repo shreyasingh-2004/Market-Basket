@@ -1,21 +1,6 @@
 import { assets, footerLinks } from "../assets/assets";
 
 const Footer = () => {
-    const linkSections = [
-        {
-            title: "Quick Links",
-            links: ["Home", "Best Sellers", "Offers & Deals", "Contact Us", "FAQs"]
-        },
-        {
-            title: "Need Help?",
-            links: ["Delivery Information", "Return & Refund Policy", "Payment Methods", "Track your Order", "Contact Us"]
-        },
-        {
-            title: "Follow Us",
-            links: ["Instagram", "Twitter", "Facebook", "YouTube"]
-        }
-    ];
-
     return (
         <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-24 bg-primary/10">
             <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
