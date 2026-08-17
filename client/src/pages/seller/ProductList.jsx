@@ -43,9 +43,12 @@ const ProductList = () => {
                                     <td className="md:px-4 pl-2 md:pl-4 py-3 flex items-center space-x-3 truncate">
                                         <div className="border border-gray-300 rounded overflow-hidden">
                                             <img
-                                                src={Array.isArray(product.image) ? product.image[0] : (product.image || assets.upload_area)}
+                                                src={(Array.isArray(product.image) ? product.image[0] : product.image) || assets.upload_area}
                                                 alt={product.name || 'Product'}
                                                 className="w-16"
+                                                onError={(event) => {
+                                                    event.currentTarget.src = assets.upload_area;
+                                                }}
                                             />
                                         </div>
                                         <span className="truncate max-sm:hidden w-full">{product.name}</span>
