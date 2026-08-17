@@ -1,11 +1,9 @@
 import React from 'react'
 import { useAppContext } from '../context/AppContext';
-import axios from 'axios';
-import { API } from '../api';
 import toast from 'react-hot-toast';
 
 const Login = () => {
-    const { ShowUserLogin, setShowUserLogin, setUser, navigate } = useAppContext();
+    const { ShowUserLogin, setShowUserLogin, setUser, navigate, axios } = useAppContext();
     const [state, setState] = React.useState("login");
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
@@ -23,7 +21,7 @@ const Login = () => {
 
         try {
             event.preventDefault();
-            const { data } = await axios.post(`${API}/api/user/${state}`, 
+            const { data } = await axios.post(`/api/user/${state}`, 
                 { name, email, password });
 
             if (data.success) {

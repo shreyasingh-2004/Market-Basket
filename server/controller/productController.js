@@ -4,20 +4,56 @@ import cloudinary from "../configs/cloudinary.js";
 // Add product: /api/product/add
 export const addProduct = async (req, res) => {
     try {
-        let productData = JSON.parse(req.body.productData || '{}');
+        const productData = JSON.parse(req.body.productData || '{}');
+            // Ensure description is an array so schema validation won't fail
+            if (!productData.description) productData.description = [];
         const files = req.files || [];
-        let imagesUrls = await Promise.all(
+
+        const name = productData.name?.toString().trim();
+        const category = productData.category?.toString().trim();
+        const descriptionText = productData.description?.toString().trim();
+        const price = Number(productData.price);
+        const offerPrice = Number(productData.offerPrice);
+
+        if (!name || !category || !Number.isFinite(price) || !Number.isFinite(offerPrice)) {
+            return res.status(400).json({ success: false, message: "Please fill all required product details correctly" });
+        }
+
+        if (files.length === 0) {
+            return res.status(400).json({ success: false, message: "Please upload at least one product image" });
+        }
+
+        const cloudinaryConfig = cloudinary.config();
+        if (!cloudinaryConfig.cloud_name || !cloudinaryConfig.api_key || !cloudinaryConfig.api_secret) {
+            return res.status(500).json({ success: false, message: "Cloudinary is not configured correctly" });
+        }
+
+        const imagesUrls = await Promise.all(
             files.map(async (file) => {
-                let result = await cloudinary.uploader.upload(file.path, { resource_type: "image" });
+                const result = await cloudinary.uploader.upload(file.path, { resource_type: "image" });
                 return result.secure_url;
             })
         );
-        await Product.create({ ...productData, image: imagesUrls });
+
+        const description = (descriptionText || '')
+            .split(/\r?\n|,/) 
+            .map((item) => item.trim())
+            .filter(Boolean);
+
+        await Product.create({
+            name,
+            description,
+            category,
+            price,
+            offerPrice,
+            image: imagesUrls,
+        });
+
         res.json({ success: true, message: "Product added successfully" });
 
     } catch (error) {
         console.log(error.message);
-        res.json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 }
 

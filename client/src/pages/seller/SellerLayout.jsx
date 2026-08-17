@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { NavLink, Outlet, Link, useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
@@ -6,7 +5,6 @@ import toast from 'react-hot-toast';
 
 const SellerLayout = () => {
     const { setIsSeller , axios} = useAppContext();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const navigate = useNavigate(); // Add navigate for redirect
 
     const sidebarLinks = [
@@ -20,6 +18,7 @@ const SellerLayout = () => {
         const {data} = await axios.get('/api/seller/logout');
         if(data.success){
             toast.success(data.message);
+            setIsSeller(false);
             navigate("/");
         }
         else{
@@ -45,7 +44,7 @@ const SellerLayout = () => {
             </div>
             <div className="flex">
                 {/* Sidebar */}
-                <div className={`${isSidebarOpen ? 'md:w-64 w-16' : 'w-16'} border-r border-gray-300 pt-4 flex flex-col transition-all duration-300`}>
+                <div className="md:w-64 w-16 border-r border-gray-300 pt-4 flex flex-col transition-all duration-300">
                     {sidebarLinks.map((item, index) => (
                         <NavLink
                             to={item.path}
@@ -60,7 +59,7 @@ const SellerLayout = () => {
                             }
                         >
                             <img src={item.icon} alt={item.name} className="w-6 h-6" />
-                            <span className={`${isSidebarOpen ? 'md:block hidden' : 'hidden'} transition-all duration-300`}>
+                            <span className="md:block hidden transition-all duration-300">
                                 {item.name}
                             </span>
                         </NavLink>

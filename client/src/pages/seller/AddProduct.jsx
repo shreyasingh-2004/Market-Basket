@@ -11,12 +11,16 @@ const AddProduct = () => {
     const [category, setCategory] = useState('');
     const [price, setPrice] = useState('');
     const [offerPrice, setOfferPrice] = useState('');
-    const { axios } = useAppContext();
+    const { axios, fetchProducts } = useAppContext();
     const [loading, setLoading] = useState(false);
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         console.log('AddProduct onSubmitHandler called', { name, category });
+        if (!files.some(Boolean)) {
+            toast.error('Please upload at least one product image');
+            return;
+        }
         setLoading(true);
         const productData = {
             name,
@@ -42,6 +46,12 @@ const AddProduct = () => {
                 setPrice('');
                 setOfferPrice('');
                 setFiles([]);
+                // Refresh product list so newly added product appears immediately
+                try {
+                    fetchProducts();
+                } catch (err) {
+                    console.error('Failed to refresh products after add:', err);
+                }
             } else {
                 toast.error((data && data.message) || 'Failed to add product');
             }
@@ -88,12 +98,12 @@ const AddProduct = () => {
                 <div className="flex flex-col gap-1 max-w-md">
                     <label className="text-base font-medium" htmlFor="product-description">Product Description</label>
                     <textarea onChange={(e) => setDescription(e.target.value)} value={description}
-                    id="product-description" rows={4} className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none" placeholder="Type here"></textarea>
+                    id="product-description" rows={4} className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none" placeholder="Type here" required></textarea>
                 </div>
                 <div className="w-full flex flex-col gap-1">
                     <label className="text-base font-medium" htmlFor="category">Category</label>
                     <select onChange={(e) => setCategory(e.target.value)} value={category}
-                    id="category" className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40">
+                    id="category" className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40" required>
                         <option value="">Select Category</option>
                         {categories.map((items, index) => (
                             <option key={index} value={items.path}>{items.path}</option>

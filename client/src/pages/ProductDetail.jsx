@@ -45,8 +45,9 @@ const ProductDetail = () => {
     }, [products, product]);
 
     useEffect(() => {
-        if (product && product.image && product.image.length > 0) {
-            setThumbnail(product.image[0]);
+        const images = Array.isArray(product?.image) ? product.image : [product?.image].filter(Boolean);
+        if (images.length > 0) {
+            setThumbnail(images[0]);
         }
     }, [product]);
 
@@ -75,6 +76,11 @@ const ProductDetail = () => {
         );
     }
 
+    const productImages = Array.isArray(product.image) ? product.image.filter(Boolean) : [product.image].filter(Boolean);
+    const descriptionList = Array.isArray(product.description)
+        ? product.description
+        : [product.description].filter(Boolean);
+
     return (
         <div className="mt-12 px-4 md:px-8 max-w-6xl mx-auto">
             {/* Breadcrumb */}
@@ -91,7 +97,7 @@ const ProductDetail = () => {
                 <div className="flex flex-col md:flex-row gap-6 w-full lg:w-1/2">
                     {/* Thumbnails */}
                     <div className="flex flex-row md:flex-col gap-3 order-2 md:order-1 overflow-x-auto md:overflow-visible">
-                        {product.image.map((image, index) => (
+                        {(productImages.length > 0 ? productImages : [assets.upload_area]).map((image, index) => (
                             <div
                                 key={index}
                                 onClick={() => setThumbnail(image)}
@@ -102,6 +108,9 @@ const ProductDetail = () => {
                                     src={image}
                                     alt={`Thumbnail ${index + 1}`}
                                     className="w-16 h-16 object-contain"
+                                    onError={(event) => {
+                                        event.currentTarget.src = assets.upload_area;
+                                    }}
                                 />
                             </div>
                         ))}
@@ -110,9 +119,12 @@ const ProductDetail = () => {
                     {/* Main Image */}
                     <div className="border border-gray-200 rounded-lg overflow-hidden w-full order-1 md:order-2">
                         <img
-                            src={thumbnail || product.image[0]}
+                            src={thumbnail || productImages[0] || assets.upload_area}
                             alt={product.name}
                             className="w-full h-72 md:h-96 object-contain"
+                            onError={(event) => {
+                                event.currentTarget.src = assets.upload_area;
+                            }}
                         />
                     </div>
                 </div>
@@ -151,7 +163,7 @@ const ProductDetail = () => {
                     <div className="mt-6">
                         <h3 className="text-lg font-semibold mb-3">About Product</h3>
                         <ul className="list-disc pl-5 space-y-2 text-gray-700">
-                            {product.description.map((desc, index) => (
+                            {descriptionList.map((desc, index) => (
                                 <li key={index}>{desc}</li>
                             ))}
                         </ul>
@@ -195,7 +207,7 @@ const ProductDetail = () => {
                             {relatedProducts
                                 .filter((product) => product.inStock)
                                 .map((product, index) => (
-                                    <ProductCard key={`${product.id}-${index}`} product={product} />
+                                    <ProductCard key={`${product._id || product.id}-${index}`} product={product} />
                                 ))}
                         </div>
                         <button
