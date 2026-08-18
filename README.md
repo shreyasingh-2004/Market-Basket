@@ -2,12 +2,6 @@
 
 A full-stack grocery shopping application built with the MERN stack. This project demonstrates core concepts of full-stack development including authentication, CRUD operations, API integration, payment processing, and deployment.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-18.x-green.svg)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen.svg)](https://mongodb.com)
-[![Stripe](https://img.shields.io/badge/Stripe-Payments-6773E5.svg)](https://stripe.com)
-
 ---
 
 ## About The Project
