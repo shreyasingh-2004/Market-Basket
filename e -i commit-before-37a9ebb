@@ -1,0 +1,23 @@
+[33m197e018[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mcursor/fix-deployment-api-cors[m[33m)[m Remove .env file and clean history
+[33m37a9ebb[m Update Market Basket project
+[33md5f7a8f[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #1 from shreyasingh-2004/cursor/fix-deployment-api-cors
+[33mc468f3b[m[33m ([m[1;31morigin/cursor/fix-deployment-api-cors[m[33m)[m Fix production API connectivity, CORS, and deployment reliability for Vercel and Railway.
+[33m0dfb2a5[m Refactor README content and deployment information
+[33m9e60bc8[m Enhance README with project overview and setup instructions
+[33m4136193[m[33m ([m[1;32mmain[m[33m)[m add vercel.json
+[33m49a336d[m Refactor server.js for improved readability and structure
+[33m4dd79bf[m Update CORS configuration for frontend origin
+[33m2772b26[m cleanup: remove secrets and update code
+[33m835d9f4[m fix railway scripts and gitignore
+[33me75004b[m fix railway build with direct scripts
+[33m4a37d6a[m clean error
+[33mf89dfa2[m removed env file
+[33mb4cadc6[m fixed deployment issue
+[33mf5815fa[m Clean commit after removing env + fixes
+[33m1f6ebfa[m Deployment issue resolved
+[33meed4d05[m Payment Gateway Integration (without secrets)
+[33m228c410[m Till Payment gateway
+[33m58cc45b[m Till Payment gateway
+[33mece1336[m Paymnet gateway
+[33m08f7a00[m Add client, server, and .vite folders
+[33m5eab88e[m first commit
