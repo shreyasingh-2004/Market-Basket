@@ -161,46 +161,6 @@ bash
 npm start
 The application will be available at http://localhost:3000.
 
-Stripe Payment Integration
-Configuration
-Backend Setup:
-
-javascript
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-// Create payment intent
-app.post('/api/create-payment-intent', async (req, res) => {
-  const { amount, currency } = req.body;
-  
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
-      currency: currency || 'usd',
-      payment_method_types: ['card'],
-    });
-    
-    res.json({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-Frontend Setup:
-
-javascript
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
-
-function App() {
-  return (
-    <Elements stripe={stripePromise}>
-      <CheckoutForm />
-    </Elements>
-  );
-}
 Payment Flow
 User adds items to cart
 
